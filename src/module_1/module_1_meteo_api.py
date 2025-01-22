@@ -2,6 +2,7 @@ import requests
 from typing import Dict
 import logging
 import time
+from urllib.parse import urlencode
 
 
 logger = logging.getLogger(__name__)
@@ -55,6 +56,18 @@ def make_api_call_with_cool_off(
             cool_off = cool_off * 2 
         else:
             raise 
+
+    def get_data_meteo(latitude: str, longitude: str, start_date: str, end_date: str) -> Dict:
+        headers = {}
+        params = {
+            "latitude": latitude,
+            "longitude": longitude,
+            "start_date": start_date,
+            "end_date": end_date,
+            "daily": ",".join(VARIABLES),
+        }
+
+        return make_api_call_with_cool_off(API_URL + urlencode(params, safe=","), headers)
 
 def main():
     raise NotImplementedError
