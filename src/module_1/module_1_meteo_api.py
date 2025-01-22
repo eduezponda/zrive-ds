@@ -3,6 +3,7 @@ from typing import Dict
 import logging
 import time
 from urllib.parse import urlencode
+import pandas as pd
 
 
 logger = logging.getLogger(__name__)
@@ -57,20 +58,34 @@ def make_api_call_with_cool_off(
         else:
             raise 
 
-    def get_data_meteo(latitude: str, longitude: str, start_date: str, end_date: str) -> Dict:
-        headers = {}
-        params = {
-            "latitude": latitude,
-            "longitude": longitude,
-            "start_date": start_date,
-            "end_date": end_date,
-            "daily": ",".join(VARIABLES),
-        }
+def get_data_meteo(latitude: str, longitude: str, start_date: str, end_date: str) -> Dict:
+    headers = {}
+    params = {
+        "latitude": latitude,
+        "longitude": longitude,
+        "start_date": start_date,
+        "end_date": end_date,
+        "daily": ",".join(VARIABLES),
+    }
 
-        return make_api_call_with_cool_off(API_URL + urlencode(params, safe=","), headers)
+    return make_api_call_with_cool_off(API_URL + urlencode(params, safe=","), headers)
 
 def main():
-    raise NotImplementedError
+    cities_df_list = []
+    start_date = "2010-01-01"
+    end_date = "2020-12-31"
+
+    for city, coordinates in COORDINATES.items():
+        latitude = coordinates["latitude"]
+        longitude = coordinates["longitude"]
+
+        city_df = pd.DataFrame(
+            get_data_meteo(latitude, longitude, start_date, end_date)["daily"]
+        ).assign(city=city)
+
+        cities_df_list.append(city_df)
+
+    cities_df = pd.concat(cities_df_list)
 
 if __name__ == "__main__":
     main()
