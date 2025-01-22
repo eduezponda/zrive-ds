@@ -1,5 +1,4 @@
 import unittest
-
 import numpy as np
 from src.module_1.module_1_meteo_api import (
     make_api_call_with_cool_off,
