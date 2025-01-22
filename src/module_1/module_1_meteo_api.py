@@ -4,7 +4,7 @@ import logging
 import time
 from urllib.parse import urlencode
 import pandas as pd
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 
 
 logger = logging.getLogger(__name__)
@@ -23,8 +23,8 @@ VARIABLES = ["temperature_2m_mean", "precipitation_sum", "wind_speed_10m_max"]
 
 
 def make_api_call_with_cool_off(
-    url: str, 
-    headers: Dict[str, any], 
+    url: str,
+    headers: Dict[str, any],
     payload: Dict[str, any] = None,
     num_attempts: int = 5,
     cool_off: int = 1
@@ -41,25 +41,28 @@ def make_api_call_with_cool_off(
             return response.json()
 
         except requests.exceptions.ConnectionError as e:
-           logger.info(f"Connection error: {e}. Esperando {cool_off}segundos...")
+            logger.info(f"Connection error: {e}. Esperando {cool_off} segundos")
 
         except requests.exceptions.HTTPError as e:
             if response.status_code == 404:
-                logger.info(f"Error 404 Not Found: {e}. Esperando {cool_off} segundos...")
-                raise 
+                logger.info(f"Error 404 Not Found: {e}. Esperando {cool_off} segundos")
+                raise
             else:
-                logger.info(f"HTTP error: {e}. Esperando {cool_off}segundos...")
+                logger.info(f"HTTP error: {e}. Esperando {cool_off} segundos")
 
         except requests.exceptions.RequestException as req_err:
-            logger.info(f"Request error: {req_err}. Esperando {cool_off}segundos...")
+            logger.info(f"Request error: {req_err}. Esperando {cool_off} segundos")
 
         if cool_off < num_attempts:
             time.sleep(cool_off)
-            cool_off = cool_off * 2 
+            cool_off = cool_off * 2
         else:
-            raise 
+            raise
 
-def get_data_meteo(latitude: str, longitude: str, start_date: str, end_date: str) -> Dict:
+
+def get_data_meteo(
+        latitude: str, longitude: str, start_date: str, end_date: str
+) -> Dict:
     headers = {}
     params = {
         "latitude": latitude,
@@ -70,6 +73,7 @@ def get_data_meteo(latitude: str, longitude: str, start_date: str, end_date: str
     }
 
     return make_api_call_with_cool_off(API_URL + urlencode(params, safe=","), headers)
+
 
 def get_processed_df_by_month(data: pd.DataFrame) -> pd.DataFrame:
     data["time"] = pd.to_datetime(data["time"])
@@ -90,6 +94,7 @@ def get_processed_df_by_month(data: pd.DataFrame) -> pd.DataFrame:
         processed_data.append(monthly_data_per_city)
 
     return pd.DataFrame(processed_data)
+
 
 def plot_df(processed_df: pd.DataFrame):
     rows = len(VARIABLES)
@@ -159,6 +164,7 @@ def main():
     processed_df = get_processed_df_by_month(cities_df)
 
     plot_df(processed_df)
+
 
 if __name__ == "__main__":
     main()
