@@ -1,8 +1,14 @@
 import unittest
-from src.module_1.module_1_meteo_api import make_api_call_with_cool_off
+
+import numpy as np
+from src.module_1.module_1_meteo_api import (
+    make_api_call_with_cool_off,
+    get_processed_df_by_month
+)
 import pytest
 from unittest.mock import Mock, patch
 import requests
+import pandas as pd
 
 
 class MockResponse:
@@ -107,6 +113,39 @@ def test_make_api_call_with_cool_off_request_exception(caplog):
             "Request error: Error. Esperando 2 segundos",
         ]
         assert [r.msg for r in caplog.records] == log_messages
+
+
+def test_get_processed_df_by_month():
+    previous_data = {
+        'time': ['2025-01-22 00:00', '2025-01-22 01:00', '2025-01-22 02:00'],
+        'city': ['Barcelona', 'Madrid', 'Sevilla'],
+        'temperature_2m_mean': [15, 14, 13],
+        'precipitation_sum': [0, 1, 0],
+        'wind_speed_10m_max': [5, 4, 6]
+    }
+    previous_df = pd.DataFrame(previous_data)
+
+    expected_data = {
+        'city': ['Barcelona', 'Madrid', 'Sevilla'],
+        'month': [pd.Timestamp('2025-01-01')] * 3,
+        'temperature_2m_mean_max': [15, 14, 13],
+        'temperature_2m_mean_min': [15, 14, 13],
+        'temperature_2m_mean_mean': [15.0, 14.0, 13.0],
+        'temperature_2m_mean_std': [np.nan, np.nan, np.nan],
+        'precipitation_sum_max': [0, 1, 0],
+        'precipitation_sum_min': [0, 1, 0],
+        'precipitation_sum_mean': [0.0, 1.0, 0.0],
+        'precipitation_sum_std': [np.nan, np.nan, np.nan],
+        'wind_speed_10m_max_max': [5, 4, 6],
+        'wind_speed_10m_max_min': [5, 4, 6],
+        'wind_speed_10m_max_mean': [5.0, 4.0, 6.0],
+        'wind_speed_10m_max_std': [np.nan, np.nan, np.nan]
+    }
+    expected_df = pd.DataFrame(expected_data)
+
+    response = get_processed_df_by_month(previous_df)
+
+    pd.testing.assert_frame_equal(expected_df, response)
 
 
 if __name__ == "__main__":
