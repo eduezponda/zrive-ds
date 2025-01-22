@@ -26,7 +26,7 @@ def make_api_call_with_cool_off(
     url: str,
     headers: Dict[str, any],
     payload: Dict[str, any] = None,
-    num_attempts: int = 5,
+    num_attempts: int = 3,
     cool_off: int = 1
 ) -> Dict:
     for i in range(num_attempts):
@@ -41,23 +41,29 @@ def make_api_call_with_cool_off(
             return response.json()
 
         except requests.exceptions.ConnectionError as e:
-            logger.info(f"Connection error: {e}. Esperando {cool_off} segundos")
+            if cool_off < num_attempts:
+                logger.info(f"Connection error: {e}. Esperando {cool_off} segundos")
+            else:
+                raise
 
         except requests.exceptions.HTTPError as e:
             if response.status_code == 404:
-                logger.info(f"Error 404 Not Found: {e}. Esperando {cool_off} segundos")
+                logger.info("Error 404 Not Found")
                 raise
-            else:
+
+            if cool_off < num_attempts:
                 logger.info(f"HTTP error: {e}. Esperando {cool_off} segundos")
+            else:
+                raise
 
         except requests.exceptions.RequestException as req_err:
-            logger.info(f"Request error: {req_err}. Esperando {cool_off} segundos")
+            if cool_off < num_attempts:
+                logger.info(f"Request error: {req_err}. Esperando {cool_off} segundos")
+            else:
+                raise
 
-        if cool_off < num_attempts:
-            time.sleep(cool_off)
-            cool_off = cool_off * 2
-        else:
-            raise
+        time.sleep(cool_off)
+        cool_off = cool_off * 2
 
 
 def get_data_meteo(
