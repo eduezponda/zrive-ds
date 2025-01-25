@@ -7,6 +7,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+logging.basicConfig(
+    format=(
+        "%(asctime)s — %(name)s — %(levelname)s — "
+        "%(funcName)s:%(lineno)d — %(message)s"
+    ),
+    level=logging.INFO,
+)
+
 logger = logging.getLogger(__name__)
 
 logger.setLevel(logging.INFO)
@@ -40,34 +48,40 @@ def make_api_call_with_cool_off(
 
             return response.json()
 
-        except requests.exceptions.ConnectionError as e:
+        except requests.exceptions.ConnectionError as conn_err:
             if cool_off < num_attempts:
-                logger.info(f"Connection error: {e}. Esperando {cool_off} segundos")
+                logger.warning(
+                    f"Connection error: {conn_err}. "
+                    f"Waiting {cool_off} seconds"
+                )
             else:
-                raise
+                raise requests.exceptions.ConnectionError(conn_err)
 
-        except requests.exceptions.HTTPError as e:
+        except requests.exceptions.HTTPError as http_err:
             if response.status_code == 404:
-                logger.info("Error 404 Not Found")
-                raise
+                logger.error("Error 404 Not Found")
+                raise requests.exceptions.HTTPError(http_err)
 
             if cool_off < num_attempts:
-                logger.info(f"HTTP error: {e}. Esperando {cool_off} segundos")
+                logger.warning(f"HTTP error: {http_err}. Waiting {cool_off} seconds")
             else:
-                raise
+                raise requests.exceptions.HTTPError(http_err)
 
         except requests.exceptions.RequestException as req_err:
             if cool_off < num_attempts:
-                logger.info(f"Request error: {req_err}. Esperando {cool_off} segundos")
+                logger.warning(
+                    f"Request error: {req_err}. "
+                    f"Waiting {cool_off} seconds"
+                )
             else:
-                raise
+                raise requests.exceptions.RequestException(req_err)
 
         time.sleep(cool_off)
         cool_off = cool_off * 2
 
 
 def get_data_meteo(
-        latitude: str, longitude: str, start_date: str, end_date: str
+        latitude: float, longitude: float, start_date: str, end_date: str
 ) -> Dict:
     headers = {}
     params = {

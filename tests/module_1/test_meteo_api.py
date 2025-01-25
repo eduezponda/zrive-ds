@@ -1,4 +1,3 @@
-import unittest
 import numpy as np
 from src.module_1.module_1_meteo_api import (
     make_api_call_with_cool_off,
@@ -68,8 +67,8 @@ def test_make_api_call_with_cool_off_444(monkeypatch, caplog):
         make_api_call_with_cool_off("mock_url", headers)
 
     log_messages = [
-        "HTTP error: Error. Esperando 1 segundos",
-        "HTTP error: Error. Esperando 2 segundos",
+        "HTTP error: Error. Waiting 1 seconds",
+        "HTTP error: Error. Waiting 2 seconds",
     ]
     assert [r.msg for r in caplog.records] == log_messages
 
@@ -88,8 +87,8 @@ def test_make_api_call_with_cool_off_connection_error(caplog):
         make_api_call_with_cool_off("mock_url", headers)
 
         log_messages = [
-            "Connection error: Error. Esperando 1 segundos",
-            "Connection error: Error. Esperando 2 segundos",
+            "Connection error: Error. Waiting 1 seconds",
+            "Connection error: Error. Waiting 2 seconds",
         ]
         assert [r.msg for r in caplog.records] == log_messages
 
@@ -108,8 +107,8 @@ def test_make_api_call_with_cool_off_request_exception(caplog):
         make_api_call_with_cool_off("mock_url", headers)
 
         log_messages = [
-            "Request error: Error. Esperando 1 segundos",
-            "Request error: Error. Esperando 2 segundos",
+            "Request error: Error. Waiting 1 seconds",
+            "Request error: Error. Waiting 2 seconds",
         ]
         assert [r.msg for r in caplog.records] == log_messages
 
@@ -145,7 +144,3 @@ def test_get_processed_df_by_month():
     response = get_processed_df_by_month(previous_df)
 
     pd.testing.assert_frame_equal(expected_df, response)
-
-
-if __name__ == "__main__":
-    unittest.main()
