@@ -7,6 +7,8 @@ import datetime
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.base import BaseEstimator
 from module_4.utils import build_feature_frame, get_feature_cols, LABEL_COL
+import time
+import logging
 
 
 logger = logging.getLogger(__name__)
@@ -39,7 +41,19 @@ def save_model(model: BaseEstimator, model_name: str) -> None:
     
     joblib.dump(model, os.path.join(OUTPUT_PATH, model_name))
 
-def ridge_model_selection(df: pd.DataFrame) -> None:
+def time_training_model(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        
+        execution_time = end_time - start_time
+        logger.info(f"Execution time for {func.__name__}: {execution_time:.4f} seconds")
+        return result
+    return wrapper
+
+@time_training_model
+def gbt_model_selection(df: pd.DataFrame) -> None:
     gbt = GradientBoostingClassifier(
         learning_rate=LEARNING_RATE, max_depth=MAX_DEPTH, n_estimators=N_TREES
     )  
@@ -53,7 +67,7 @@ def ridge_model_selection(df: pd.DataFrame) -> None:
 
 def main():
     df = build_feature_frame()
-    ridge_model_selection(df)
+    gbt_model_selection(df)
 
 
 if __name__ == "__main__":
