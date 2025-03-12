@@ -1,0 +1,2 @@
+Dependency lightgbm is added with poetry but there is an error trying to importing it in module_5/solution/module_5.ipynb.
+So, I have done the solution in Google Colab importing the data archive with "files.uploaded()"
