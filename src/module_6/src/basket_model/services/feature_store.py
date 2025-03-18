@@ -27,9 +27,9 @@ class FeatureStore:
     def get_features(self, user_id: str) -> pd.DataFrame:
         try:
             features = self.feature_store.loc[user_id]
-        except Exception as exception:
+        except Exception:
             raise UserNotFoundException(
                 "User not found in feature store",
                 user_id
-            ) from exception
+            )
         return features

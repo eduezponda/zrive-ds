@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
-from models.schemas import PredictRequest, PredictResponse
 
+from src.basket_model.services.feature_store import FeatureStore
 from src.basket_model.services.basket_model import BasketModel
 from src.basket_model.exceptions import PredictionException, UserNotFoundException
-from src.basket_model.services.feature_store import FeatureStore
+from src.basket_model.models.schemas import PredictRequest, PredictResponse
 
 
 router = APIRouter()
