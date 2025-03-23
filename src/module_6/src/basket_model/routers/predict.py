@@ -1,14 +1,11 @@
 from fastapi import APIRouter, HTTPException
 
-from src.basket_model.services.feature_store import FeatureStore
-from src.basket_model.services.basket_model import BasketModel
-from src.basket_model.exceptions import PredictionException, UserNotFoundException
-from src.basket_model.models.schemas import PredictRequest, PredictResponse
+from basket_model.exceptions import PredictionException, UserNotFoundException
+from basket_model.models.schemas import PredictRequest, PredictResponse
+from basket_model.dependencies.predict import feature_store, basket_model
 
 
 router = APIRouter()
-feature_store = FeatureStore()
-basket_model = BasketModel()
 
 
 @router.post("/predict", response_model=PredictResponse)
