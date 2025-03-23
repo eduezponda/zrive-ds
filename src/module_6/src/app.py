@@ -1,11 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-
-from routers import status, predict
+from basket_model.routers import status, predict
 
 app = FastAPI()
 
