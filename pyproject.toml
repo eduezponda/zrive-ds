@@ -23,6 +23,7 @@ lightgbm = "^4.6.0"
 plotnine = "^0.14.5"
 fastapi = "^0.115.11"
 uvicorn = "^0.34.0"
+prometheus-client = "^0.21.1"
 
 
 [tool.poetry.group.dev.dependencies]
