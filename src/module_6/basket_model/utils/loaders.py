@@ -3,7 +3,7 @@ import pandas as pd
 
 
 STORAGE = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "../../../../..", "data")
+    os.path.join(os.path.dirname(__file__), "../../../..", "data")
 )
 
 

@@ -29,7 +29,12 @@ prometheus-client = "^0.21.1"
 [tool.poetry.group.dev.dependencies]
 awscli = "^1.37.6"
 ipykernel = "^6.29.5"
+httpx = "^0.28.1"
+pytest-mock = "^3.14.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

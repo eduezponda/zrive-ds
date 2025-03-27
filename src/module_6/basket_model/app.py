@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from basket_model.routers import status, predict, metrics
+from module_6.basket_model.routers import status, predict, metrics
 
 app = FastAPI()
 

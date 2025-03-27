@@ -18,9 +18,10 @@ logger.setLevel(logging.INFO)
 consoleHandler = logging.StreamHandler()
 logger.addHandler(consoleHandler)
 
-
 HOLDOUT_SIZE = 0.2
+
 RIDGE_Cs = [1e-8, 1e-6, 1e-4, 1e-2] # Pruebo con 4 valores por si acaso en producción cambia algo mi dataset y mi modelo puede adaptarse a un mejor valor de regularización
+
 FEATURE_COLS = [
     "ordered_before",
     "abandoned_before",
@@ -29,6 +30,7 @@ FEATURE_COLS = [
 ]
 
 LABEL_COL = "outcome"
+
 OUTPUT_PATH = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "models/")
 )
