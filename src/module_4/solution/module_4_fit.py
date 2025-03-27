@@ -1,8 +1,8 @@
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
-from module_4.solutions.push_model import PushModel
-from module_4.solutions.utils import load_training_feature_frame
+from module_4.solution.push_model import PushModel
+from module_4.solution.utils import load_training_feature_frame
 import joblib
 import json
 import logging

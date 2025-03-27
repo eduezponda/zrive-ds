@@ -1,6 +1,6 @@
-from module_4.solutions.module_4_fit import DEFAULT_MODEL_FOLDER_PATH 
-from module_4.solutions.push_model import PushModel
-from module_4.solutions.utils import build_feature_frame 
+from module_4.solution.module_4_fit import DEFAULT_MODEL_FOLDER_PATH 
+from module_4.solution.push_model import PushModel
+from module_4.solution.utils import build_feature_frame 
 from datetime import datetime
 from typing import Any, Dict, Optional
 import joblib

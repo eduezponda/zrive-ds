@@ -1,0 +1,1 @@
+vegeta attack -duration=5s -rate=5 -targets=targets.txt -output=results.bin
